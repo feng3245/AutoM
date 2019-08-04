@@ -27,16 +27,16 @@ with open('../excludes', 'r') as file:
 driver.execute_script("arguments[0].click();", login)
 #user = driver.find_element_by_xpath('//input[@type="email"]')
 #user.send_keys(Keys.NULL)
-#for c in 'feng3245@gmail.com':
+#for c in 'axv@t.com':
 #    user.send_keys(c)
 #password = driver.find_element_by_xpath('//input[@type="password"]')
-#for c in 'passwords2':
+#for c in 'derppass':
 #    password.send_keys(c)
 #driver.execute_script("arguments[0].click();",driver.find_element_by_xpath('//button[contains(text(),"Sign In")]'))
 time.sleep(5)
 driver.get("https://hub.udacity.com/")
-
-WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+time.sleep(20)
+WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
 
 studentlinks = driver.find_elements_by_xpath('//a')
 studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
@@ -48,39 +48,42 @@ with open('../greetings', 'r') as file:
 greeting = greetings[0]
 
 with open('../greetings', 'w') as file:
-    file.write((greetings[1:]+[greeting]).join('|'))
-
-for sl in studentlinks:
-    driver.get(sl)
-    try:
-        time.sleep(5)
-        WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
-        if driver.find_element_by_xpath('//p[contains(text(),"Mentee")]'):
-            studentname = driver.find_element_by_xpath('//h2').text
-            if studentname not in exclude and studentname not in visited:
-                print(studentname)
-                visited.append(studentname)
-                nmessages = len(driver.find_elements_by_xpath('//div[@data-user-message="true"]'))
-                messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
-
-                if nmessages <= 1:
-                    print(studentname + ' is new')
-                    messageinput.send_keys(Keys.NULL)
-                    for c in 'Hi {0}, how are you doing with the course lately?'.format(studentname.split()[0].title()):
-                        messageinput.send_keys(c)
-                    messageinput.send_keys(Keys.RETURN)
-                    continue
-                if [conts for conts in driver.find_elements_by_xpath('//h6') if 'TODAY' in conts.text or 'YESTERDAY' in conts.text]:
-                    continue
-                lastcontact = [conts for conts in driver.find_elements_by_xpath('//h6') if str(datetime.now().year) in conts.text ][-1].text
-                if (datetime.now() - datetime.strptime(lastcontact, '%B %d, %Y')).days > 7:
-                    messageinput.send_keys(Keys.NULL)
-                    for c in greeting.format(studentname.split()[0].title()):
-                        messageinput.send_keys(c)
-                    messageinput.send_keys(Keys.RETURN)
-                    continue
-                    print(studentname + ' hasn\'t been contacted for a while is new')
-    except Exception as e:
-        print('probably a bad link '+ e)
-print(len(studentlinks))
+    file.write('|'.join((greetings[1:]+[greeting])))
+try:
+    for sl in studentlinks:
+        driver.get(sl)
+        try:
+            time.sleep(5)
+            WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+            if driver.find_element_by_xpath('//p[contains(text(),"Mentee")]'):
+                studentname = driver.find_element_by_xpath('//h2').text
+                if studentname not in exclude and studentname not in visited:
+                    print(studentname)
+                    visited.append(studentname)
+                    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//div[@data-user-message="true"]')))
+                    nmessages = len(driver.find_elements_by_xpath('//div[@data-user-message="true"]'))
+                    messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
+                    if [conts for conts in driver.find_elements_by_xpath('//h6') if 'TODAY' in conts.text or 'YESTERDAY' in conts.text]:
+                        continue
+                    if nmessages <= 1:
+                        print(studentname + ' is new')
+                        messageinput.send_keys(Keys.NULL)
+                        for c in greeting.format(studentname.split()[0].title()):
+                            messageinput.send_keys(c)
+                        messageinput.send_keys(Keys.RETURN)
+                        continue
+                    lastcontact = [conts for conts in driver.find_elements_by_xpath('//h6') if str(datetime.now().year) in conts.text ][-1].text
+                    if (datetime.now() - datetime.strptime(lastcontact, '%B %d, %Y')).days > 7:
+                        messageinput.send_keys(Keys.NULL)
+                        for c in greeting.format(studentname.split()[0].title()):
+                            messageinput.send_keys(c)
+                        messageinput.send_keys(Keys.RETURN)
+                        continue
+                        print(studentname + ' hasn\'t been contacted for a while is new')
+        except Exception as e:
+            print('probably a bad link '+ str(e))
+except Exception as e:
+    with open('../exceptionss', 'w') as file:
+        file.write(''+str(e))
+    
 driver.close()
