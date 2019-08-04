@@ -1,1 +1,2 @@
-name 'studentlinks' is not defined
+Message: session not created: This version of ChromeDriver only supports Chrome version 76
+ 19

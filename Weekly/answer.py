@@ -4,7 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.common.keys import Keys
-import sys
+import sys, os
 import time
 from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
@@ -38,8 +38,7 @@ try:
     driver.get("https://hub.udacity.com/")
     time.sleep(20)
     WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
-    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
-
+    
     studentlinks = driver.find_elements_by_xpath('//a')
     studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
     visited = []
@@ -89,7 +88,8 @@ try:
         with open('../exceptionss', 'w') as file:
             file.write(''+str(e))
 except Exception as e:
+    exc_type, exc_obj, exc_tb = sys.exc_info()
     with open('../exceptionss', 'w') as file:
-        file.write(''+str(e))
+        file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
     
 driver.close()
