@@ -1,2 +1,3 @@
-Message: session not created: This version of ChromeDriver only supports Chrome version 76
- 19
+Message: timeout
+  (Session info: chrome=76.0.3809.100)
+ 62
