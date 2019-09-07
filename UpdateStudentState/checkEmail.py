@@ -6,7 +6,7 @@ from selenium.webdriver import ChromeOptions
 from selenium.webdriver.common.keys import Keys
 import sys, os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -26,22 +26,19 @@ try:
 	menteePassProjects = []
 	menteeFailProjects = []
 	
-	projectProgressParagraphs = driver.find_elements_by_xpath('//span[contains(text(), "Your mentee,") and contains(@class, "y2")]')
-	for projectProgressParagraph in projectProgressParagraphs:
-		projectprogText = projectProgressParagraph.text.split('Hi Feng, ')[1]
-		if 'did not pass' in projectprogText:
-			menteename = projectprogText.split('did not pass the')[0].replace('Your mentee', '').replace(',','').strip()
-			menteeproject = projectprogText.split('did not pass the')[1].split('project')[0].strip()
-			menteeFailProjects.append('{0}={1}'.format(menteename, menteeproject))
-		elif 'passed' in  projectprogText:
-			menteename = projectprogText.split('passed the')[0].replace('Your mentee', '').replace(',','').strip()
-			menteeproject = projectprogText.split('passed the')[1].split('project')[0].strip()
-			menteePassProjects.append('{0}={1}'.format(menteename, menteeproject))
-	
-	while driver.find_elements_by_xpath('//tr[contains(@class, "boomeranginlinebutton")]'):
-		mails = driver.find_elements_by_xpath('//tr[contains(@class, "boomeranginlinebutton")]')
-		driver.execute_script("arguments[0].click();",mails[-1])
-		driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
+	mails = driver.find_elements_by_xpath('//tr[contains(@class, "boomeranginlinebutton")]')
+	for mail in mails:
+		if datetime.strptime(str(mail.find_element_by_xpath('//td[contains(@class,"xW") and contains(@class,"xY")]/span').get_attribute("title")), '%a, %b %d, %Y, %I:%M %p') > (datetime.now()-timedelta(days = 1)):			
+			projectProgressParagraph = mail.find_element_by_xpath('//span[contains(text(), "Your mentee,") and contains(@class, "y2")]')
+			projectprogText = projectProgressParagraph.text.split('Hi Feng, ')[1]
+			if 'did not pass' in projectprogText:
+				menteename = projectprogText.split('did not pass the')[0].replace('Your mentee', '').replace(',','').strip()
+				menteeproject = projectprogText.split('did not pass the')[1].split('project')[0].strip()
+				menteeFailProjects.append('{0}={1}'.format(menteename, menteeproject))
+			elif 'passed' in  projectprogText:
+				menteename = projectprogText.split('passed the')[0].replace('Your mentee', '').replace(',','').strip()
+				menteeproject = projectprogText.split('passed the')[1].split('project')[0].strip()
+				menteePassProjects.append('{0}={1}'.format(menteename, menteeproject))
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	with open('../email_read_exceptionss', 'w') as file:
