@@ -7,6 +7,8 @@ from datetime import datetime
 
 def get_student_project_progress(studentprojectprogress):
 	studentprjdict = {}
+	if not studentprojectprogress:
+		return studentprjdict
 	for sp in studentprojectprogress.split('|'):
 		if sp.split('=')[0] not in studentprjdict:
 			studentprjdict[sp.split('=')[0]] = []
