@@ -22,10 +22,10 @@ driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", ch
 
 try:
 	driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
-	WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//span[@class="Dj"]')))
+	WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//span[@class="Dj"]')))
 	menteePassProjects = []
 	menteeFailProjects = []
-	
+	time.sleep(20)
 	mails = driver.find_elements_by_xpath('//tr[contains(@class, "boomeranginlinebutton")]')
 	for mail in mails:
 		if datetime.strptime(str(mail.find_element_by_xpath('//td[contains(@class,"xW") and contains(@class,"xY")]/span').get_attribute("title")), '%a, %b %d, %Y, %I:%M %p') > (datetime.now()-timedelta(days = 1)):			
@@ -46,9 +46,9 @@ except Exception as e:
 	driver.close()
 	raise e
 with open('../StudentsPassProjects', 'w') as file:
-	file.write('|'.join(menteePassProjects))
+	file.write('|'.join(list(set(menteePassProjects))))
 
 with open('../StudentFailProjects', 'w') as file:
-	file.write('|'.join(menteeFailProjects))
+	file.write('|'.join(list(set(menteeFailProjects))))
 
 driver.close()
