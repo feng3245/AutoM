@@ -22,7 +22,7 @@ driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", ch
 
 try:
 	driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
-	WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//span[@class="Dj"]')))
+	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//span[@class="Dj"]')))
 	menteePassProjects = []
 	menteeFailProjects = []
 	time.sleep(20)
