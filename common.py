@@ -15,7 +15,17 @@ def get_student_project_progress(studentprojectprogress):
 			studentprjdict[sp.split('=')[0]] = []
 		studentprjdict[sp.split('=')[0]].append(sp.split('=')[1])
 	return studentprjdict
-
+def answering_machine(sl, driver):
+	driver.get(sl)
+	time.sleep(5)
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@data-user-message="true"]')))
+	messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
+	for c in 'It appears that your mentor Feng L. is currently unavailable but rest assured your questions will be answered in due time!':
+		messageinput.send_keys(c)
+	messageinput.send_keys(Keys.RETURN)
+	return
+	
 def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {}, projectfails = {}):
 	driver.get(sl)
 	time.sleep(5)

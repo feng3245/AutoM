@@ -10,7 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink
+from common import get_student_project_progress, handle_studentlink, answering_machine
 
 options = ChromeOptions()
 options.add_argument('--allow-running-insecure-content')
@@ -47,12 +47,9 @@ try:
 		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
 
 	time.sleep(20)
-	studentlinks = driver.find_elements_by_xpath('//a')
+	studentlinks = driver.find_elements_by_xpath('//span[contains(@class, "notification-badge_count")]/../../../..')
 	studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
 	studentlinks.reverse()
-	activestudentlinks = driver.find_elements_by_xpath('//span[contains(@class, "notification-badge_count")]/../../../..')
-	activestudentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
-	studentlinks = list(set(studentlinks) - set(activestudentlinks))
 	visited = []
 	badlinks = []
 	greetings = []
@@ -74,7 +71,7 @@ try:
 	try:
 		for sl in studentlinks:
 			try:
-				handle_studentlink(sl, driver, visited, exclude, greeting, successstudents, failstudents)
+				answering_machine(sl, driver)
 			except Exception as e:
 				exc_type, exc_obj, exc_tb = sys.exc_info()
 				with open('../exceptionss', 'w') as file:
