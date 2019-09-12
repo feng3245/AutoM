@@ -50,24 +50,9 @@ try:
 	studentlinks = driver.find_elements_by_xpath('//span[contains(@class, "notification-badge_count")]/../../../..')
 	studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
 	studentlinks.reverse()
-	visited = []
-	badlinks = []
-	greetings = []
-	with open('../greetings', 'r') as file:
-		greetings = file.read().replace('\n', '').split('|')
-	
-	greeting = greetings[0]
-	
-	with open('../greetings', 'w') as file:
-		file.write('|'.join((greetings[1:]+[greeting])))
 
-	failstudents = {}
-	successstudents = {}
-	
-	with open('../StudentFailProjects', 'r') as file:
-		failstudents = get_student_project_progress(file.read().replace('\n', ''))
-	with open('../StudentsPassProjects', 'r') as file:
-		successstudents = get_student_project_progress(file.read().replace('\n', ''))
+	badlinks = []
+	email_out(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], 'Following students need your attention: ',('\n'.join(studentlinks)))
 	try:
 		for sl in studentlinks:
 			try:

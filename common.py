@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 import sys, os
 import time
 from datetime import datetime
+import smtplib
 
 def get_student_project_progress(studentprojectprogress):
 	studentprjdict = {}
@@ -20,11 +21,24 @@ def answering_machine(sl, driver):
 	time.sleep(5)
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@data-user-message="true"]')))
+	if not driver.find_element_by_xpath('//p[contains(text(),"Mentee")]'):
+		return
 	messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
 	for c in 'It appears that your mentor Feng L. is currently unavailable but rest assured your questions will be answered in due time!':
 		messageinput.send_keys(c)
 	messageinput.send_keys(Keys.RETURN)
 	return
+
+def email_out(smtpsrv, user, password, sendto, subject, msgbody):
+	smtpserver = smtplib.SMTP(smtpsrv,587)
+	smtpserver.ehlo()
+	smtpserver.starttls()
+	smtpserver.ehlo
+	smtpserver.login(user, password)
+	header = 'To:' + sendto + '\r\n' + 'From: ' + user + '\r\n' + 'Subject:{0} \r\n'.format(subject)
+	msgbody = header + msgbody
+	smtpserver.sendmail(user, sendto, msgbody)
+	smtpserver.close()
 	
 def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {}, projectfails = {}):
 	driver.get(sl)
