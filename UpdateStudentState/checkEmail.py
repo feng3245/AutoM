@@ -26,7 +26,7 @@ try:
 	menteePassProjects = []
 	menteeFailProjects = []
 	time.sleep(20)
-	mails = driver.find_elements_by_xpath('//span[contains(@name, "Udacity")]')
+	mails = driver.find_elements_by_xpath('//td[contains(@role, "gridcell")]')
 	for mail in mails:
 		if datetime.strptime(str(mail.find_element_by_xpath('//td[contains(@class,"xW") and contains(@class,"xY")]/span').get_attribute("title")), '%a, %b %d, %Y, %I:%M %p') > (datetime.now()-timedelta(days = 1)):			
 			projectProgressParagraph = mail.find_element_by_xpath('//span[contains(text(), "Your mentee,") and contains(@class, "y2")]')
