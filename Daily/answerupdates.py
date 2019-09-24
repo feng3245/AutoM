@@ -74,12 +74,12 @@ try:
 				handle_studentlink(sl, driver, visited, exclude, greeting, successstudents, failstudents)
 			except Exception as e:
 				exc_type, exc_obj, exc_tb = sys.exc_info()
-				with open('../exceptionss', 'w') as file:
+				with open('../answerupdateexceptions', 'w') as file:
 					file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
 				badlinks.append(sl)
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
-		with open('../exceptionss', 'w') as file:
+		with open('../answerupdateexceptions', 'w') as file:
 			file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
 		with open('../StudentFailProjects', 'w') as file:
 			file.write(get_student_project_string(failstudents))
@@ -89,7 +89,7 @@ try:
 		raise e
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
-	with open('../exceptionss', 'w') as file:
+	with open('../answerupdateexceptions', 'w') as file:
 		file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
 
 	driver.close()
