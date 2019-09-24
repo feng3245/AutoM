@@ -16,6 +16,14 @@ def get_student_project_progress(studentprojectprogress):
 			studentprjdict[sp.split('=')[0]] = []
 		studentprjdict[sp.split('=')[0]].append(sp.split('=')[1])
 	return studentprjdict
+
+def get_student_project_string(studentprojectprogressdic):
+	if not studentprojectprogressdic:
+		return ""
+	return '|'.join(['|'.join([k+"="+m for m in studentprojectprogressdic[k]]) for k in studentprojectprogressdic])
+		
+    
+
 def answering_machine(sl, driver):
 	driver.get(sl)
 	time.sleep(5)
@@ -53,21 +61,27 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 			messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
 			
 			if studentname.split()[0] in projectpasses:
-				studentprojects in [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
+				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
 				for pp in projectpasses[studentname.split()[0]]:
 					if any([(sp in pp) for sp in studentprojects]):
 						for c in 'Just saw a notice that your submission for {0} got approved. Nice job keep up the good work :)'.format(pp):
 							messageinput.send_keys(c)
 						messageinput.send_keys(Keys.RETURN)
+						projectpasses[studentname.split()[0]].remove(pp)
+						if not projectpasses[studentname.split()[0]]:
+							del projectpasses[studentname.split()[0]]
 						return
 			
 			if studentname.split()[0] in projectfails:
-				studentprojects in [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
+				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
 				for fp in projectfails[studentname.split()[0]]:
 					if any([(sp in fp) for sp in studentprojects]):
 						for c in 'Just saw reviewer had some change requests on {0}. Let me know if you needed some help'.format(pp):
 							messageinput.send_keys(c)
 						messageinput.send_keys(Keys.RETURN)
+						projectfails[studentname.split()[0]].remove(fp)
+						if not projectfails[studentname.split()[0]]:
+							del projectfails[studentname.split()[0]]
 						return
 			
 			if nmessages == 2 and driver.find_elements_by_xpath('//a[contains(text(),"{0}.")]'.format(studentname)):

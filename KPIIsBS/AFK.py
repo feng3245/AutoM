@@ -10,7 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink, answering_machine
+from common import get_student_project_progress, handle_studentlink, answering_machine, email_out
 
 options = ChromeOptions()
 options.add_argument('--allow-running-insecure-content')
@@ -52,40 +52,29 @@ try:
 	studentlinks.reverse()
 
 	badlinks = []
-	email_out(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], 'Following students need your attention: ',('\n'.join(studentlinks)))
+	if studentlinks:
+		email_out(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], 'Following students need your attention: ',('\r\n'.join(studentlinks)))
 	try:
 		for sl in studentlinks:
 			try:
 				answering_machine(sl, driver)
 			except Exception as e:
 				exc_type, exc_obj, exc_tb = sys.exc_info()
-				with open('../exceptionss', 'w') as file:
+				with open('../exceptionssAFK', 'w') as file:
 					file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
 				badlinks.append(sl)
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
-		with open('../exceptionss', 'w') as file:
+		with open('../exceptionssAFK', 'w') as file:
 			file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
-		with open('../StudentFailProjects', 'w') as file:
-			file.write('')
-		with open('../StudentsPassProjects', 'w') as file:
-			file.write('')
 		driver.close()
 		raise e
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
-	with open('../exceptionss', 'w') as file:
+	with open('../exceptionssAFK', 'w') as file:
 		file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
-	with open('../StudentFailProjects', 'w') as file:
-		file.write('')
-	with open('../StudentsPassProjects', 'w') as file:
-		file.write('')
 	driver.close()
 	raise e
-with open('../badlinks', 'w') as file:
+with open('../badlinksanswermachine', 'w') as file:
 	file.write('|'.join(badlinks))
-with open('../StudentFailProjects', 'w') as file:
-	file.write('')
-with open('../StudentsPassProjects', 'w') as file:
-	file.write('')
 driver.close()

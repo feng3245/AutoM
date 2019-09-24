@@ -17,10 +17,12 @@ options = ChromeOptions()
 options.add_argument('--allow-running-insecure-content')
 options.add_argument('--disable-web-security')
 options.add_argument('--no-referrers')
-options.add_argument('--user-data-dir=C:/Users/feng3245/AppData/Local/Google/Chrome/User Data')
+options.add_argument('--user-data-dir=C:/Users/AutoEmailCheck/User Data')
 driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
 
 try:
+	driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
+	time.sleep(20)
 	driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//span[@class="Dj"]')))
 	menteePassProjects = []
@@ -30,6 +32,9 @@ try:
 	for mail in mails:
 		if datetime.strptime(str(mail.find_element_by_xpath('//td[contains(@class,"xW") and contains(@class,"xY")]/span').get_attribute("title")), '%a, %b %d, %Y, %I:%M %p') > (datetime.now()-timedelta(days = 1)):			
 			projectProgressParagraph = mail.find_element_by_xpath('//span[contains(text(), "Your mentee,") and contains(@class, "y2")]')
+			
+			if not 'Hi Feng, ' in projectProgressParagraph.text:
+				continue
 			projectprogText = projectProgressParagraph.text.split('Hi Feng, ')[1]
 			if 'did not pass' in projectprogText:
 				menteename = projectprogText.split('did not pass the')[0].replace('Your mentee', '').replace(',','').strip()

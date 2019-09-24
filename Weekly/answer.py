@@ -10,7 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink
+from common import get_student_project_progress, handle_studentlink, get_student_project_string
 
 options = ChromeOptions()
 options.add_argument('--allow-running-insecure-content')
@@ -85,25 +85,19 @@ try:
 		with open('../exceptionss', 'w') as file:
 			file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
 		with open('../StudentFailProjects', 'w') as file:
-			file.write('')
+			file.write(get_student_project_string(failstudents))
 		with open('../StudentsPassProjects', 'w') as file:
-			file.write('')
+			file.write(get_student_project_string(successstudents))
 		driver.close()
 		raise e
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	with open('../exceptionss', 'w') as file:
 		file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
-	with open('../StudentFailProjects', 'w') as file:
-		file.write('')
-	with open('../StudentsPassProjects', 'w') as file:
-		file.write('')
+
 	driver.close()
 	raise e
 with open('../badlinks', 'w') as file:
 	file.write('|'.join(badlinks))
-with open('../StudentFailProjects', 'w') as file:
-	file.write('')
-with open('../StudentsPassProjects', 'w') as file:
-	file.write('')
+
 driver.close()

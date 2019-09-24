@@ -1,1 +1,3 @@
-'str' object has no attribute 'get_attribute' 54
+Message: stale element reference: element is not attached to the page document
+  (Session info: chrome=77.0.3865.90)
+ 51
