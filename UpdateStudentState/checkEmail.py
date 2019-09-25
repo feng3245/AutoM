@@ -54,6 +54,6 @@ with open('../StudentsPassProjects', 'w') as file:
 	file.write('|'.join(list(set(menteePassProjects))))
 
 with open('../StudentFailProjects', 'w') as file:
-	file.write('|'.join(list(set(menteeFailProjects))))
+	file.write('|'.join(list(set(menteeFailProjects)-set(menteePassProjects))))
 
 driver.close()
