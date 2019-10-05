@@ -10,18 +10,11 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink, get_student_project_string
+from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver
+
+driver = setup_driver('C:/Users/feng3245/AppData/Local/Google/Chrome/User Data')
 
 
-
-
-options = ChromeOptions()
-options.add_argument('--allow-running-insecure-content')
-options.add_argument('--disable-web-security')
-options.add_argument('--no-referrers')
-options.add_argument('--user-data-dir=C:/Users/feng3245/AppData/Local/Google/Chrome/User Data')
-driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
-driver.maximize_window()
 try:
 	driver.get("https://auth.udacity.com/sign-in")
 	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))

@@ -2,10 +2,24 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium import webdriver
+from selenium.webdriver import ChromeOptions
 import sys, os
 import time
 from datetime import datetime
 import smtplib
+
+def setup_driver(usrdir):
+	options = ChromeOptions()
+	options.add_argument('--ignore-certificate-errors')
+	options.add_argument('--ignore-ssl-errors')
+	options.add_argument('--allow-running-insecure-content')
+	options.add_argument('--disable-web-security')
+	options.add_argument('--no-referrers')
+	options.add_argument('--user-data-dir={0}'.format(usrdir))
+	driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
+	driver.maximize_window()
+	return driver
 
 def get_student_project_progress(studentprojectprogress):
 	studentprjdict = {}
@@ -60,6 +74,19 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 			nmessages = len(driver.find_elements_by_xpath('//div[@data-user-message="true"]'))
 			messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
 			
+			
+			if nmessages == 2 and driver.find_elements_by_xpath('//a[contains(text(),"{0}.")]'.format(studentname)):
+				convomessages = driver.find_elements_by_xpath('//div[@data-user-message="true"]/div[3]/div/div/div/p')
+				if '?' not in str(convomessages[-1].text) and len(convomessages[-1].text.split()) <= 7:
+					messageinput.send_keys(keys.null)
+					for c in 'you got it :D':
+						messageinput.send_keys(c)
+					messageinput.send_keys(Keys.RETURN)
+					return
+
+			if [conts for conts in driver.find_elements_by_xpath('//h6') if 'TODAY' in conts.text or 'YESTERDAY' in conts.text]:
+				return
+			
 			if studentname.split()[0] in projectpasses:
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
 				for pp in projectpasses[studentname.split()[0]]:
@@ -83,18 +110,7 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 						if not projectfails[studentname.split()[0]]:
 							del projectfails[studentname.split()[0]]
 						return
-			
-			if nmessages == 2 and driver.find_elements_by_xpath('//a[contains(text(),"{0}.")]'.format(studentname)):
-				convomessages = driver.find_elements_by_xpath('//div[@data-user-message="true"]/div[3]/div/div/div/p')
-				if '?' not in str(convomessages[-1].text) and len(convomessages[-1].text.split()) <= 7:
-					messageinput.send_keys(keys.null)
-					for c in 'you got it :D':
-						messageinput.send_keys(c)
-					messageinput.send_keys(Keys.RETURN)
-					return
 
-			if [conts for conts in driver.find_elements_by_xpath('//h6') if 'TODAY' in conts.text or 'YESTERDAY' in conts.text]:
-				return
 			if nmessages <= 1:
 				messageinput.send_keys(Keys.NULL)
 				for c in greeting.format(studentname.split()[0].title()):

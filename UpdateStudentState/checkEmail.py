@@ -10,15 +10,9 @@ from datetime import datetime, timedelta
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from common import setup_driver
 
-
-
-options = ChromeOptions()
-options.add_argument('--allow-running-insecure-content')
-options.add_argument('--disable-web-security')
-options.add_argument('--no-referrers')
-options.add_argument('--user-data-dir=C:/Users/AutoEmailCheck/User Data')
-driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
+driver = setup_driver('C:/Users/AutoEmailCheck/User Data')
 
 try:
 	driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
@@ -30,7 +24,7 @@ try:
 	time.sleep(20)
 	mails = driver.find_elements_by_xpath('//td[contains(@role, "gridcell")]')
 	for mail in mails:
-		if datetime.strptime(str(mail.find_element_by_xpath('//td[contains(@class,"xW") and contains(@class,"xY")]/span').get_attribute("title")), '%a, %b %d, %Y, %I:%M %p') > (datetime.now()-timedelta(days = 1)):			
+		if datetime.strptime(str(mail.find_element_by_xpath('//td[contains(@class,"xW") and contains(@class,"xY")]/span').get_attribute("title")), '%a, %b %d, %Y, %I:%M %p') > (datetime.now()-timedelta(hours = 12)):			
 			projectProgressParagraph = mail.find_element_by_xpath('//span[contains(text(), "Your mentee,") and contains(@class, "y2")]')
 			
 			if not 'Hi Feng, ' in projectProgressParagraph.text:
