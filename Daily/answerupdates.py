@@ -19,9 +19,10 @@ options.add_argument('--no-referrers')
 options.add_argument('--user-data-dir=C:/Users/ProjectGreeter/User Data')
 driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
 driver.maximize_window()
+driver.set_page_load_timeout(300)
 try:
 	driver.get("https://auth.udacity.com/sign-in")
-	WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))
+	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))
 	
 	login = driver.find_element_by_xpath('//img[@alt="google"]')
 	exclude = []
@@ -31,7 +32,7 @@ try:
 		failstudents = get_student_project_progress(file.read().replace('\n', ''))
 	with open('../StudentsPassProjects', 'r') as file:
 		successstudents = get_student_project_progress(file.read().replace('\n', ''))
-	studentsinquestion = list(get_student_project_progress(successstudents).keys())+list(get_student_project_progress(failstudents).keys())
+	studentsinquestion = list(successstudents.keys())+list(failstudents.keys())
 	if not studentsinquestion:
 		driver.close()
 		sys.exit("No students to greet on projects")
@@ -64,8 +65,6 @@ try:
 	with open('../greetings', 'w') as file:
 		file.write('|'.join((greetings[1:]+[greeting])))
 
-	failstudents = {}
-	successstudents = {}
 	
 
 	try:
@@ -96,5 +95,10 @@ except Exception as e:
 	raise e
 with open('../badlinks', 'w') as file:
 	file.write('|'.join(badlinks))
+
+with open('../StudentFailProjects', 'w') as file:
+	file.write(get_student_project_string(failstudents))
+with open('../StudentsPassProjects', 'w') as file:
+	file.write(get_student_project_string(successstudents))
 
 driver.close()

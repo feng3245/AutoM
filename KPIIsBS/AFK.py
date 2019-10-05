@@ -19,6 +19,7 @@ options.add_argument('--no-referrers')
 options.add_argument('--user-data-dir=C:/Users/Automation/User Data')
 driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
 driver.maximize_window()
+driver.set_page_load_timeout(300)
 try:
 	driver.get("https://auth.udacity.com/sign-in")
 	WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))

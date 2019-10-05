@@ -13,6 +13,8 @@ sys.path.append('../')
 from common import get_student_project_progress, handle_studentlink, get_student_project_string
 
 options = ChromeOptions()
+options.add_argument('--ignore-certificate-errors')
+options.add_argument('--ignore-ssl-errors')
 options.add_argument('--allow-running-insecure-content')
 options.add_argument('--disable-web-security')
 options.add_argument('--no-referrers')
@@ -21,7 +23,7 @@ driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", ch
 driver.maximize_window()
 try:
 	driver.get("https://auth.udacity.com/sign-in")
-	WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))
 	
 	login = driver.find_element_by_xpath('//img[@alt="google"]')
 	exclude = []
@@ -99,5 +101,10 @@ except Exception as e:
 	raise e
 with open('../badlinks', 'w') as file:
 	file.write('|'.join(badlinks))
+
+with open('../StudentFailProjects', 'w') as file:
+	file.write(get_student_project_string(failstudents))
+with open('../StudentsPassProjects', 'w') as file:
+	file.write(get_student_project_string(successstudents))
 
 driver.close()
