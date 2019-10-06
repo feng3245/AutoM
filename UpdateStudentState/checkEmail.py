@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+sys.path.append('../')
 from common import setup_driver
 
 driver = setup_driver('C:/Users/AutoEmailCheck/User Data')
@@ -18,7 +19,7 @@ try:
 	driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
 	time.sleep(20)
 	driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
-	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//span[@class="Dj"]')))
+	WebDriverWait(driver, 360).until(EC.presence_of_element_located((By.XPATH, '//span[@class="Dj"]')))
 	menteePassProjects = []
 	menteeFailProjects = []
 	time.sleep(20)
@@ -42,7 +43,7 @@ except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	with open('../email_read_exceptionss', 'w') as file:
 		file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
-	driver.close()
+	driver.quit()
 	raise e
 with open('../StudentsPassProjects', 'w') as file:
 	file.write('|'.join(list(set(menteePassProjects))))
@@ -50,4 +51,4 @@ with open('../StudentsPassProjects', 'w') as file:
 with open('../StudentFailProjects', 'w') as file:
 	file.write('|'.join(list(set(menteeFailProjects)-set(menteePassProjects))))
 
-driver.close()
+driver.quit()
