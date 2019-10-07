@@ -29,7 +29,7 @@ try:
 	studentsinquestion = list(successstudents.keys())+list(failstudents.keys())
 	if not studentsinquestion:
 		driver.close()
-		sys.exit("No students to greet on projects")
+		sys.exit(0)
 	#temporarily not using it
 	driver.execute_script("arguments[0].click();", login)
 	time.sleep(5)
