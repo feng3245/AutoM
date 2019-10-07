@@ -8,7 +8,7 @@ import sys, os
 import time
 from datetime import datetime
 import smtplib
-
+from email.mime.text import MIMEText
 def setup_driver(usrdir):
 	options = ChromeOptions()
 	options.add_argument('--ignore-certificate-errors')
@@ -52,14 +52,16 @@ def answering_machine(sl, driver):
 	return
 
 def email_out(smtpsrv, user, password, sendto, subject, msgbody):
+	msg = MIMEText(msgbody,'html')
+	msg['Subject'] = subject
+	msg['From'] = user
+	msg['To'] = sendto
 	smtpserver = smtplib.SMTP(smtpsrv,587)
 	smtpserver.ehlo()
 	smtpserver.starttls()
 	smtpserver.ehlo
 	smtpserver.login(user, password)
-	header = 'To:' + sendto + '\r\n' + 'From: ' + user + '\r\n' + 'Subject:{0} \r\n'.format(subject)
-	msgbody = header + msgbody
-	smtpserver.sendmail(user, sendto, msgbody)
+	smtpserver.sendmail(user, sendto, msg.as_string())
 	smtpserver.close()
 	
 def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {}, projectfails = {}):
