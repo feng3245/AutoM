@@ -48,7 +48,7 @@ try:
 
 	badlinks = []
 	if studentlinks:
-		email_out(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], 'Following students need your attention: ',('\r\n'.join(studentlinks)))
+		email_out(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], 'Following students need your attention: ',('<br/>'.join(studentlinks)))
 	try:
 		for sl in studentlinks:
 			try:
