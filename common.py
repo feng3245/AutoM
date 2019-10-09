@@ -89,7 +89,7 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 			if [conts for conts in driver.find_elements_by_xpath('//h6') if 'TODAY' in conts.text or 'YESTERDAY' in conts.text]:
 				return
 			
-			if ' '.join(studentname.split()[:-1]) in projectpasses:
+			if ' '.join(studentname.split()[:-1]) in projectpasses or any(studentname in k for k in projectpasses.keys()):
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
 				for pp in projectpasses[' '.join(studentname.split()[:-1])]:
 					if any([(sp in pp) for sp in studentprojects]):
@@ -100,6 +100,20 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 						if not projectpasses[studentname.split()[0]]:
 							del projectpasses[studentname.split()[0]]
 						return
+						
+			passstudent = [k for k in projectpasses.keys() if studentname in k]
+			if passstudent:
+				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
+				for pp in projectpasses[passstudent]:
+					if any([(sp in pp) for sp in studentprojects]):
+						for c in 'Just saw a notice that your submission for {0} got approved. Nice job keep up the good work :)'.format(pp):
+							messageinput.send_keys(c)
+						messageinput.send_keys(Keys.RETURN)
+						projectpasses[passstudent].remove(pp)
+						if not projectpasses[passstudent]:
+							del projectpasses[passstudent]
+						return
+			
 			
 			if ' '.join(studentname.split()[:-1]) in projectfails:
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
@@ -112,7 +126,18 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 						if not projectfails[studentname.split()[0]]:
 							del projectfails[studentname.split()[0]]
 						return
-
+			failstudent = [k for k in projectfails.keys() if studentname in k]
+			if failstudent:
+				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
+				for fp in projectfails[failstudent]:
+					if any([(sp in fp) for sp in studentprojects]):
+						for c in 'Just saw reviewer had some change requests on {0}. Let me know if you needed some help'.format(pp):
+							messageinput.send_keys(c)
+						messageinput.send_keys(Keys.RETURN)
+						projectfails[failstudent].remove(fp)
+						if not projectfails[failstudent]:
+							del projectfails[failstudent]
+						return
 			if nmessages <= 1:
 				messageinput.send_keys(Keys.NULL)
 				for c in greeting.format(studentname.split()[0].title()):
