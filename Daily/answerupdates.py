@@ -64,14 +64,16 @@ try:
 	
 
 	try:
-		for sl in studentlinks:
-			try:
-				handle_studentlink(sl, driver, visited, exclude, greeting, successstudents, failstudents)
-			except Exception as e:
-				exc_type, exc_obj, exc_tb = sys.exc_info()
-				with open('../answerupdateexceptions', 'w') as file:
-					file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
-				badlinks.append(sl)
+		with open('../answerupdateTracker', 'w+') as updateLogger:
+			updateLogger.write('Students been looked at {}'.format('\r\n'.join(studentlinks)))
+			for sl in studentlinks:
+				try:
+					handle_studentlink(sl, driver, visited, exclude, greeting, successstudents, failstudents, updateLogger)
+				except Exception as e:
+					exc_type, exc_obj, exc_tb = sys.exc_info()
+					with open('../answerupdateexceptions', 'w') as file:
+						file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
+					badlinks.append(sl)
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		with open('../answerupdateexceptions', 'w') as file:

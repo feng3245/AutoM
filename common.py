@@ -64,7 +64,7 @@ def email_out(smtpsrv, user, password, sendto, subject, msgbody):
 	smtpserver.sendmail(user, sendto, msg.as_string())
 	smtpserver.close()
 	
-def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {}, projectfails = {}):
+def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {}, projectfails = {}, logfile = None):
 	driver.get(sl)
 	time.sleep(5)
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
@@ -88,7 +88,7 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 
 			if [conts for conts in driver.find_elements_by_xpath('//h6') if 'TODAY' in conts.text or 'YESTERDAY' in conts.text]:
 				return
-			
+
 			if ' '.join(studentname.split()[:-1]) in projectpasses:
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
 				for pp in projectpasses[' '.join(studentname.split()[:-1])]:
@@ -101,12 +101,19 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 							del projectpasses[studentname.split()[0]]
 						return			
 			passstudent =[k for k in projectpasses.keys() if studentname in k][0] if  [k for k in projectpasses.keys() if studentname in k] else ''
-			
+			if logfile:
+				logfile.write('{} is the student passing\r\n'.format(passstudent))
 			
 			if len(passstudent) > 0:
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
+				if logfile:
+					logfile.write('Student have projects {}\r\n'.format(','.join(studentprojects)))
 				for pp in projectpasses[passstudent]:
+					if logfile:
+						logfile.write('{} passed {}\r\n'.format(passstudent, pp))
 					if any([(sp in pp) for sp in studentprojects]):
+						if logfile:
+							logfile.write('{} is one of {}\r\n'.format(pp, ','.join(studentprojects)))
 						for c in 'Just saw a notice that your submission for {0} got approved. Nice job keep up the good work :)'.format(pp):
 							messageinput.send_keys(c)
 						messageinput.send_keys(Keys.RETURN)
@@ -128,10 +135,18 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 							del projectfails[studentname.split()[0]]
 						return
 			failstudent = [k for k in projectfails.keys() if studentname in k][0] if [k for k in projectfails.keys() if studentname in k] else ''
+			if logfile:
+				logfile.write('{} is the student failing\r\n'.format(passstudent))
 			if len(failstudent) > 0:
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
+				if logfile:
+					logfile.write('Student have projects {}\r\n'.format(','.join(studentprojects)))				
 				for fp in projectfails[failstudent]:
+					if logfile:
+						logfile.write('{} failed {}\r\n'.format(passstudent, fp))				
 					if any([(sp in fp) for sp in studentprojects]):
+						if logfile:
+							logfile.write('{} is one of {}\r\n'.format(fp, ','.join(studentprojects)))					
 						for c in 'Just saw reviewer had some change requests on {0}. Let me know if you needed some help'.format(fp):
 							messageinput.send_keys(c)
 						messageinput.send_keys(Keys.RETURN)
