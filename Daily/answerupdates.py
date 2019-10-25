@@ -65,7 +65,7 @@ try:
 
 	try:
 		with open('../answerupdateTracker', 'w+') as updateLogger:
-			updateLogger.write('Students been looked at {}'.format('\r\n'.join(studentlinks)))
+			updateLogger.write('Students been looked at {}\r\n'.format('\r\n'.join(studentlinks)))
 			for sl in studentlinks:
 				try:
 					handle_studentlink(sl, driver, visited, exclude, greeting, successstudents, failstudents, updateLogger)

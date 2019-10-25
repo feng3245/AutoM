@@ -88,7 +88,7 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 
 			if [conts for conts in driver.find_elements_by_xpath('//h6') if 'TODAY' in conts.text or 'YESTERDAY' in conts.text]:
 				return
-
+			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//ul[contains(@class, "project-list")]/li/p')))
 			if ' '.join(studentname.split()[:-1]) in projectpasses:
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
 				for pp in projectpasses[' '.join(studentname.split()[:-1])]:
@@ -136,14 +136,14 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 						return
 			failstudent = [k for k in projectfails.keys() if studentname in k][0] if [k for k in projectfails.keys() if studentname in k] else ''
 			if logfile:
-				logfile.write('{} is the student failing\r\n'.format(passstudent))
+				logfile.write('{} is the student failing\r\n'.format(failstudent))
 			if len(failstudent) > 0:
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
 				if logfile:
 					logfile.write('Student have projects {}\r\n'.format(','.join(studentprojects)))				
 				for fp in projectfails[failstudent]:
 					if logfile:
-						logfile.write('{} failed {}\r\n'.format(passstudent, fp))				
+						logfile.write('{} failed {}\r\n'.format(failstudent, fp))				
 					if any([(sp in fp) for sp in studentprojects]):
 						if logfile:
 							logfile.write('{} is one of {}\r\n'.format(fp, ','.join(studentprojects)))					
