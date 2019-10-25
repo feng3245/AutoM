@@ -16,9 +16,9 @@ driver = setup_driver('C:/Users/ProjectGreeter/User Data')
 
 try:
 	driver.get("https://auth.udacity.com/sign-in")
-	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))
+	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
 	
-	login = driver.find_element_by_xpath('//img[@alt="google"]')
+	login = driver.find_element_by_xpath('//div[contains(text(),"Sign in with Google")]')
 	exclude = []
 	with open('../excludes', 'r') as file:
 		exclude = file.read().replace('\n', '').split('|')
@@ -30,6 +30,8 @@ try:
 	if not studentsinquestion:
 		driver.close()
 		sys.exit(0)
+	studentsinquestion = [ s.title()[:len(s)-(len(s.split()[-1])-1)] if len(s.split()) >1 else s  for s in studentsinquestion]
+	print(studentsinquestion)
 	#temporarily not using it
 	driver.execute_script("arguments[0].click();", login)
 	time.sleep(5)

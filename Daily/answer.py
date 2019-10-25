@@ -17,9 +17,9 @@ driver = setup_driver('C:/Users/feng3245/AppData/Local/Google/Chrome/User Data')
 
 try:
 	driver.get("https://auth.udacity.com/sign-in")
-	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))
+	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
 	
-	login = driver.find_element_by_xpath('//img[@alt="google"]')
+	login = driver.find_element_by_xpath('//div[contains(text(),"Sign in with Google")]')
 	exclude = []
 	with open('../excludes', 'r') as file:
 		exclude = file.read().replace('\n', '').split('|')
