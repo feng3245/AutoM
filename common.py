@@ -21,6 +21,7 @@ def setup_driver(usrdir):
 	options.add_argument("--headless")
 	options.add_argument("--window-size=1900,1080")
 	options.add_argument('--user-data-dir={0}'.format(usrdir))
+	options.add_argument('--no-sandbox')
 	capabilities = DesiredCapabilities.CHROME.copy()
 	capabilities['acceptSslCerts'] = True 
 	capabilities['acceptInsecureCerts'] = True
