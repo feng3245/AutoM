@@ -34,15 +34,15 @@ try:
 	print(studentsinquestion)
 	#temporarily not using it
 	driver.execute_script("arguments[0].click();", login)
-	time.sleep(5)
-	try:
-		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href, "/conversations/community:personal-mentor")]')))
-		
-	except Exception as e:
-		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href, "/conversations/community:personal-mentor")]')))
-
+	time.sleep(20)
+	#try:
+	#	driver.get("http://hub.udacity.com/")
+	#	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href, "/conversations/community:personal-mentor")]')))
+	#	
+	#except Exception as e:
+	#	driver.get("http://hub.udacity.com/")
+	#	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href, "/conversations/community:personal-mentor")]')))
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href, "/conversations/community:personal-mentor")]')))
 	time.sleep(20)
 	studentlinks = driver.find_elements_by_xpath('//a['+" or ".join(["contains(.,'"+siq+"')" for siq in studentsinquestion])+']')
 	studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
