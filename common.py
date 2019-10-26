@@ -11,21 +11,29 @@ import smtplib
 from email.mime.text import MIMEText
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-def setup_driver(usrdir):
+def setup_driver(usrdir, headless = True):
 	options = ChromeOptions()
 	options.add_argument('--ignore-certificate-errors')
 	options.add_argument('--ignore-ssl-errors')
 	options.add_argument('--allow-running-insecure-content')
 	options.add_argument('--disable-web-security')
 	options.add_argument('--no-referrers')
-	options.add_argument("--headless")
-	options.add_argument("--window-size=1900,1080")
+	if headless:
+		options.add_argument("--headless")
+		options.add_argument("--window-size=1900,1080")
+		options.add_argument('--no-sandbox')
 	options.add_argument('--user-data-dir={0}'.format(usrdir))
-	options.add_argument('--no-sandbox')
+	
 	capabilities = DesiredCapabilities.CHROME.copy()
 	capabilities['acceptSslCerts'] = True 
 	capabilities['acceptInsecureCerts'] = True
-	driver = webdriver.Chrome(desired_capabilities=capabilities, executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
+	if headless:
+		driver = webdriver.Chrome(desired_capabilities=capabilities, executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
+	
+	if not headless:
+		driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
+		driver.maximize_window()
+		
 	return driver
 
 def get_student_project_progress(studentprojectprogress):

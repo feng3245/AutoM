@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
 from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver
 
-driver = setup_driver('C:/Users/ProjectGreeter/User Data')
+driver = setup_driver('C:/Users/ProjectGreeter/User Data', False)
 
 try:
 	driver.get("https://auth.udacity.com/sign-in")
