@@ -36,6 +36,9 @@ try:
 	driver.execute_script("arguments[0].click();", login)
 	time.sleep(20)
 	print(driver.current_url)
+	while 'hub.udacity.com' not in driver.current_url:
+		print('Are we there yet?')
+		time.sleep(20)
 	#try:
 	#	driver.get("http://hub.udacity.com/")
 	#	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href, "/conversations/community:personal-mentor")]')))
