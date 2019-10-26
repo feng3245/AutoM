@@ -22,6 +22,7 @@ def setup_driver(usrdir, headless = False):
 		options.add_argument("--headless")
 		options.add_argument("--window-size=1900,1080")
 		options.add_argument('--no-sandbox')
+		options.add_argument('--start-maximized')
 	options.add_argument('--user-data-dir={0}'.format(usrdir))
 	
 	capabilities = DesiredCapabilities.CHROME.copy()
@@ -31,9 +32,9 @@ def setup_driver(usrdir, headless = False):
 		driver = webdriver.Chrome(desired_capabilities=capabilities, executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
 	
 	if not headless:
-		options.add_argument("--window-size=1366,768")
+		options.add_argument("--window-size=1900,1080")
 		driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
-		driver.maximize_window()
+
 		driver.execute_script("document.body.style.zoom='100%'")
 		
 	return driver

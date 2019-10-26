@@ -12,13 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
 from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver
 
-driver = setup_driver('C:/Users/ProjectGreeter/User Data')
+driver = setup_driver('C:/Users/ProjectGreeter/User Data', True)
 
 try:
-	driver.get("https://auth.udacity.com/sign-in")
-	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
-	
-	login = driver.find_element_by_xpath('//div[contains(text(),"Sign in with Google")]')
 	exclude = []
 	with open('../excludes', 'r') as file:
 		exclude = file.read().replace('\n', '').split('|')
@@ -32,17 +28,35 @@ try:
 		sys.exit(0)
 	studentsinquestion = [ s.title()[:len(s)-(len(s.split()[-1])-1)] if len(s.split()) >1 else s  for s in studentsinquestion]
 	print(studentsinquestion)
-	#temporarily not using it
-	driver.execute_script("arguments[0].click();", login)
-	time.sleep(5)
-	try:
-		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
-		
-	except Exception as e:
-		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	
+	driver.get("https://hub.udacity.com/")
+	time.sleep(10)
+	if 'https://auth.udacity.com/sign-in' in driver.current_url:
+		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
+		user = driver.find_element_by_xpath('//input[@type="email"]')
+		user.send_keys(Keys.NULL)
+		for c in sys.argv[1]:
+			user.send_keys(c)
+		password = driver.find_element_by_xpath('//input[@type="password"]')
+		password.send_keys(Keys.NULL)
+		for c in sys.argv[2]:
+			password.send_keys(c)
+		password.send_keys(Keys.RETURN)
+		driver.execute_script("arguments[0].click();",driver.find_element_by_xpath('//button[contains(text(),"Sign In")]'))
 
+		time.sleep(20)
+		print(driver.page_source)
+		print(driver.current_url)
+		try:
+			driver.get("https://hub.udacity.com/")
+			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+			
+		except Exception as e:
+			print(driver.current_url)
+			driver.get("https://hub.udacity.com/")
+			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
 	time.sleep(20)
 	studentlinks = driver.find_elements_by_xpath('//a['+" or ".join(["contains(.,'"+siq+"')" for siq in studentsinquestion])+']')
 	studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
