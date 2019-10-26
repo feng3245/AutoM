@@ -37,11 +37,11 @@ try:
 	time.sleep(5)
 	try:
 		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a')))
 		
 	except Exception as e:
 		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a')))
 
 	time.sleep(20)
 	studentlinks = driver.find_elements_by_xpath('//a['+" or ".join(["contains(.,'"+siq+"')" for siq in studentsinquestion])+']')
