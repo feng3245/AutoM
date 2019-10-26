@@ -28,7 +28,7 @@ try:
 		successstudents = get_student_project_progress(file.read().replace('\n', ''))
 	studentsinquestion = list(successstudents.keys())+list(failstudents.keys())
 	if not studentsinquestion:
-		driver.close()
+		driver.quit()
 		sys.exit(0)
 	studentsinquestion = [ s.title()[:len(s)-(len(s.split()[-1])-1)] if len(s.split()) >1 else s  for s in studentsinquestion]
 	print(studentsinquestion)
@@ -82,14 +82,14 @@ try:
 			file.write(get_student_project_string(failstudents))
 		with open('../StudentsPassProjects', 'w') as file:
 			file.write(get_student_project_string(successstudents))
-		driver.close()
+		driver.quit()
 		raise e
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	with open('../answerupdateexceptions', 'w') as file:
 		file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
 
-	driver.close()
+	driver.quit()
 	raise e
 with open('../badlinks', 'w') as file:
 	file.write('|'.join(badlinks))
@@ -99,4 +99,4 @@ with open('../StudentFailProjects', 'w') as file:
 with open('../StudentsPassProjects', 'w') as file:
 	file.write(get_student_project_string(successstudents))
 
-driver.close()
+driver.quit()

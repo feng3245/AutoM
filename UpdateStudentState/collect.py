@@ -47,7 +47,7 @@ except Exception as e:
     exc_type, exc_obj, exc_tb = sys.exc_info()
     with open('../collect_exceptionss', 'w') as file:
         file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
-    driver.close()
+    driver.quit()
     raise e
 with open('../behindStudents', 'w') as file:
     file.write('|'.join(behindStudents))
@@ -55,4 +55,4 @@ with open('../behindStudents', 'w') as file:
 with open('../onTrackStudents', 'w') as file:
     file.write('|'.join(onTrackStudents))
 
-driver.close()
+driver.quit()

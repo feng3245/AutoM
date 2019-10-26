@@ -62,14 +62,14 @@ try:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		with open('../exceptionssAFK', 'w') as file:
 			file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
-		driver.close()
+		driver.quit()
 		raise e
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	with open('../exceptionssAFK', 'w') as file:
 		file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
-	driver.close()
+	driver.quit()
 	raise e
 with open('../badlinksanswermachine', 'w') as file:
 	file.write('|'.join(badlinks))
-driver.close()
+driver.quit()

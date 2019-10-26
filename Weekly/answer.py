@@ -82,14 +82,14 @@ try:
 			file.write(get_student_project_string(failstudents))
 		with open('../StudentsPassProjects', 'w') as file:
 			file.write(get_student_project_string(successstudents))
-		driver.close()
+		driver.quit()
 		raise e
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	with open('../exceptionss', 'w') as file:
 		file.write(''+str(e)+' ' + str(exc_tb.tb_lineno))
 
-	driver.close()
+	driver.quit()
 	raise e
 with open('../badlinks', 'w') as file:
 	file.write('|'.join(badlinks))
@@ -99,4 +99,4 @@ with open('../StudentFailProjects', 'w') as file:
 with open('../StudentsPassProjects', 'w') as file:
 	file.write(get_student_project_string(successstudents))
 
-driver.close()
+driver.quit()
