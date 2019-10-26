@@ -11,7 +11,7 @@ import smtplib
 from email.mime.text import MIMEText
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-def setup_driver(usrdir, headless = True):
+def setup_driver(usrdir, headless = False):
 	options = ChromeOptions()
 	options.add_argument('--ignore-certificate-errors')
 	options.add_argument('--ignore-ssl-errors')
