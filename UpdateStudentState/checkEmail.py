@@ -13,7 +13,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 sys.path.append('../')
 from common import setup_driver
 
-driver = setup_driver('C:/Users/AutoEmailCheck/User Data')
+driver = setup_driver('C:/Users/AutoEmailCheck/User Data', False)
 
 try:
 	driver.get("https://mail.google.com/mail/u/0/?tab=rm&ogbl#search/label%3Ayourmentee+is%3Aunread")
