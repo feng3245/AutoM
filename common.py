@@ -105,7 +105,9 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 				logfile.write("Current projects are {}.".format(','.join([erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')])))
 			if [conts for conts in driver.find_elements_by_xpath('//h6') if 'TODAY' in conts.text or 'YESTERDAY' in conts.text]:
 				return
-			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//ul[contains(@class, "project-list")]/li/p')))
+			#The hack will fix some time
+			if logfile:
+				WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//ul[contains(@class, "project-list")]/li/p')))
 			if ' '.join(studentname.split()[:-1]) in projectpasses:
 				studentprojects = [erp.text for erp in driver.find_elements_by_xpath('//ul[contains(@class, "project-list")]/li/p')]
 				for pp in projectpasses[' '.join(studentname.split()[:-1])]:
