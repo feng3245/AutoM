@@ -119,7 +119,7 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 						if not projectpasses[studentname.split()[0]]:
 							del projectpasses[studentname.split()[0]]
 						return			
-			passstudent =[k for k in projectpasses.keys() if studentname.title() in k.title()][0] if  [k for k in projectpasses.keys() if studentname in k] else ''
+			passstudent =[k for k in projectpasses.keys() if studentname.title() in k.title()][0] if  [k for k in projectpasses.keys() if studentname.title() in k.title()] else ''
 			if logfile:
 				logfile.write('{} is the student passing\r\n'.format(passstudent))
 			
@@ -153,7 +153,7 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 						if not projectfails[studentname.split()[0]]:
 							del projectfails[studentname.split()[0]]
 						return
-			failstudent = [k for k in projectfails.keys() if studentname.title() in k.title()][0] if [k for k in projectfails.keys() if studentname in k] else ''
+			failstudent = [k for k in projectfails.keys() if studentname.title() in k.title()][0] if [k for k in projectfails.keys() if studentname.title() in k.title()] else ''
 			if logfile:
 				logfile.write('{} is the student failing\r\n'.format(failstudent))
 			if len(failstudent) > 0:
