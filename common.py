@@ -120,7 +120,10 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 							del projectpasses[studentname.split()[0]]
 						return			
 			passstudent =[k for k in projectpasses.keys() if studentname.title() in k.title()][0] if  [k for k in projectpasses.keys() if studentname.title() in k.title()] else ''
+			
 			if logfile:
+				logfile.write('{} is the dictionary\r\n'.format(projectpasses))
+				logfile.write('{} is the student\r\n'.format(studentname))
 				logfile.write('{} is the student passing\r\n'.format(passstudent))
 			
 			if len(passstudent) > 0:
