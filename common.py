@@ -32,10 +32,8 @@ def setup_driver(usrdir, headless = False):
 		driver = webdriver.Chrome(desired_capabilities=capabilities, executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
 	
 	if not headless:
-		options.add_argument("--window-size=1900,1080")
 		driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
-
-		driver.execute_script("document.body.style.zoom='100%'")
+		driver.maximize_window()
 		
 	return driver
 
