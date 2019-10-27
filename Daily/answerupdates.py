@@ -26,7 +26,7 @@ try:
 	if not studentsinquestion:
 		driver.quit()
 		sys.exit(0)
-	studentsinquestion = [ s.title()[:len(s.split()[0])+2] if len(s.split()) >1 else s  for s in studentsinquestion]
+	studentsinquestion = [ ' '.join([s.split()[0], s.split()[1].title()[:1]]) if len(s.split()) >1 else s  for s in studentsinquestion]
 	print(studentsinquestion)
 	
 	driver.get("https://hub.udacity.com/")
