@@ -62,7 +62,10 @@ try:
 	studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
 	studentlinks.reverse()
 	activestudentlinks = driver.find_elements_by_xpath('//span[contains(@class, "notification-badge_count")]/../../../..')
-	activestudentlinks = [sl.get_attribute('href') for sl in activestudentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
+	if activestudentlinks:
+		activestudentlinks = [sl.get_attribute('href') for sl in activestudentlinks if sl.get_attribute('href') and '/conversations/community:personal-mentor' in sl.get_attribute('href')]
+	else:
+		activestudentlinks = []
 	studentlinks = list(set(studentlinks) - set(activestudentlinks))
 	visited = []
 	badlinks = []
