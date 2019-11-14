@@ -35,11 +35,11 @@ try:
 			
 			if 'did not pass' in projectprogText:
 				menteename = projectprogText.split('did not pass the')[0].replace('Your mentee', '').replace(',','').strip()
-				menteeproject = projectprogText.split('did not pass the')[1].split('project')[0].strip().replace('Use Deep Learning to Clone Driving Behavior','Behavioral Cloning')
+				menteeproject = projectprogText.split('did not pass the')[1].split('project')[0].strip().replace('Use Deep Learning to Clone Driving Behavior','Behavioral Cloning').replace('Traffic Sign Classification', 'Traffic Sign Classifier')
 				menteeFailProjects.append('{0}={1}'.format(menteename, menteeproject))
 			elif 'passed' in  projectprogText:
 				menteename = projectprogText.split('passed the')[0].replace('Your mentee', '').replace(',','').strip()
-				menteeproject = projectprogText.split('passed the')[1].split('project')[0].strip().replace('Use Deep Learning to Clone Driving Behavior','Behavioral Cloning')
+				menteeproject = projectprogText.split('passed the')[1].split('project')[0].strip().replace('Use Deep Learning to Clone Driving Behavior','Behavioral Cloning').replace('Traffic Sign Classification', 'Traffic Sign Classifier')
 				menteePassProjects.append('{0}={1}'.format(menteename, menteeproject))
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
