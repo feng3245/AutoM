@@ -79,7 +79,24 @@ def email_out(smtpsrv, user, password, sendto, subject, msgbody):
 	smtpserver.login(user, password)
 	smtpserver.sendmail(user, sendto, msg.as_string())
 	smtpserver.close()
+
+def handle_onetime_message(sl, driver, visited, exclude, greeting):
+	driver.get(sl)
+	time.sleep(5)
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	if driver.find_element_by_xpath('//p[contains(text(),"Mentee")]'):
+		studentname = driver.find_element_by_xpath('//h2').text
+		if studentname not in exclude and studentname not in visited:
+			visited.append(studentname)
+			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@data-user-message="true"]')))
+			messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
+			
+			messageinput.send_keys(Keys.NULL)
+			for c in greeting:
+				messageinput.send_keys(c)
+			messageinput.send_keys(Keys.RETURN)
 	
+			
 def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {}, projectfails = {}, logfile = None):
 	driver.get(sl)
 	time.sleep(5)
