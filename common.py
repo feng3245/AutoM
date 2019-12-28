@@ -52,7 +52,9 @@ def get_student_project_string(studentprojectprogressdic):
 		return ""
 	return '|'.join(['|'.join([k+"="+m for m in studentprojectprogressdic[k]]) for k in studentprojectprogressdic])
 		
-    
+def clearBox(inputbox):
+	for i in range(len(inputbox.get_attribute('value'))):
+		inputbox.send_keys(Keys.BACKSPACE)    
 
 def answering_machine(sl, driver):
 	driver.get(sl)
@@ -62,6 +64,7 @@ def answering_machine(sl, driver):
 	if not driver.find_element_by_xpath('//p[contains(text(),"Mentee")]'):
 		return
 	messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
+	clearBox(messageinput)
 	for c in 'It appears that your mentor Feng L. is currently unavailable but rest assured your questions will be answered in due time!':
 		messageinput.send_keys(c)
 	messageinput.send_keys(Keys.RETURN)
@@ -79,7 +82,9 @@ def email_out(smtpsrv, user, password, sendto, subject, msgbody):
 	smtpserver.login(user, password)
 	smtpserver.sendmail(user, sendto, msg.as_string())
 	smtpserver.close()
-	
+
+
+
 def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {}, projectfails = {}, logfile = None):
 	driver.get(sl)
 	time.sleep(5)
@@ -91,12 +96,12 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@data-user-message="true"]')))
 			nmessages = len(driver.find_elements_by_xpath('//div[@data-user-message="true"]'))
 			messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
-			
+			clearBox(messageinput)
 			
 			if nmessages == 2 and driver.find_elements_by_xpath('//a[contains(text(),"{0}.")]'.format(studentname)):
 				convomessages = driver.find_elements_by_xpath('//div[@data-user-message="true"]/div[3]/div/div/div/p')
 				if '?' not in str(convomessages[-1].text) and len(convomessages[-1].text.split()) <= 7:
-					messageinput.send_keys(keys.null)
+					messageinput.send_keys(Keys.null)
 					for c in 'you got it :D':
 						messageinput.send_keys(c)
 					messageinput.send_keys(Keys.RETURN)
