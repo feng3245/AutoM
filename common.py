@@ -201,7 +201,7 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 					messageinput.send_keys(c)
 				messageinput.send_keys(Keys.RETURN)
 				return
-			lastcontact = [conts for conts in driver.find_elements_by_xpath('//h6') if str(datetime.now().year) in conts.text ][-1].text
+			lastcontact = [conts for conts in driver.find_elements_by_xpath('//h6') if (str(datetime.now().year) in conts.text) or (str(datetime.now().year-1) in conts.text) ][-1].text
 			if (datetime.now() - datetime.strptime(lastcontact, '%B %d, %Y')).days > 7:
 				messageinput.send_keys(Keys.NULL)
 				for c in greeting.format(studentname.split()[0].title()):
