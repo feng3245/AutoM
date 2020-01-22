@@ -16,7 +16,8 @@ driver = setup_driver('C:/Users/Automation/User Data')
 
 try:
 	driver.get("https://auth.udacity.com/sign-in")
-	WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
+	time.sleep(10)
+	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
 	
 	login = driver.find_element_by_xpath('//div[contains(text(),"Sign in with Google")]')
 	exclude = []
@@ -32,14 +33,14 @@ try:
 	#for c in 'derppass':
 	#	password.send_keys(c)
 	#driver.execute_script("arguments[0].click();",driver.find_element_by_xpath('//button[contains(text(),"Sign In")]'))
-	time.sleep(5)
+	time.sleep(20)
 	try:
 		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
 		
 	except Exception as e:
 		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
 
 	time.sleep(20)
 	studentlinks = driver.find_elements_by_xpath('//span[contains(@class, "notification-badge_count")]/../../../..')
