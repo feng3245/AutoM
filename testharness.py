@@ -10,20 +10,20 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from common import get_student_project_progress, handle_studentlink, get_student_project_string
+from common import get_student_project_progress, handle_studentlink, get_student_project_string, change_message
 
 options = ChromeOptions()
 options.add_argument('--allow-running-insecure-content')
 options.add_argument('--disable-web-security')
 options.add_argument('--no-referrers')
-options.add_argument('--user-data-dir=C:/Users/feng3245/AppData/Local/Google/Chrome/User Data')
+options.add_argument('--user-data-dir=C:/Users/Feng/AppData/Local/Google/Chrome/User Data')
 driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
 driver.maximize_window()
 
 driver.get("https://auth.udacity.com/sign-in")
-WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//img[@alt="google"]')))
+WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
 
-login = driver.find_element_by_xpath('//img[@alt="google"]')
+login = driver.find_element_by_xpath('//div[contains(text(),"Sign in with Google")]')
 exclude = []
 with open('excludes', 'r') as file:
 	exclude = file.read().replace('\n', '').split('|')
@@ -63,4 +63,5 @@ with open('StudentFailProjects', 'r') as file:
 with open('StudentsPassProjects', 'r') as file:
 	successstudents = get_student_project_progress(file.read().replace('\n', ''))
     
-handle_studentlink('https://hub.udacity.com/conversations/community:personal-mentor:nd013:en-us:10428339352-11116088970?contextType=profile&profileId=11116088970', driver, visited, exclude, greeting, successstudents, failstudents)
+change_message('https://hub.udacity.com/conversations/community:conversation:10428339352-3535828681?contextType=profile&profileId=3535828681', driver, 'Feng L.', 'linked in', 'linkedin')
+time.sleep(20)

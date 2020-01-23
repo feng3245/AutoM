@@ -10,6 +10,7 @@ from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.action_chains import ActionChains
 
 def setup_driver(usrdir, headless = False):
 	options = ChromeOptions()
@@ -208,4 +209,36 @@ def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {
 					messageinput.send_keys(c)
 				messageinput.send_keys(Keys.RETURN)
 				return
+	return
+
+def change_message(sl, driver, msgusr, oldmsg, newmsg):
+	driver.get(sl)
+	time.sleep(5)
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(),"{0}")]'.format(msgusr))))
+
+	lastMsg = driver.find_elements_by_xpath('//a[contains(text(),"{0}")]'.format(msgusr))[-1]
+	hover = ActionChains(driver).move_to_element(lastMsg)
+	hover.perform()
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class, "display-user-message_menuContainer")]')))
+
+	toolsmenu = driver.find_elements_by_xpath('//div[contains(@class, "display-user-message_menuContainer")]')[-1]
+	hover = ActionChains(driver).move_to_element(toolsmenu)
+	hover.click().perform()
+	editbtn = driver.find_elements_by_xpath('//button[contains(@title, "Edit")]')[-1]
+	hover = ActionChains(driver).move_to_element(editbtn)
+	hover.click().perform()
+	editinput = driver.find_elements_by_xpath('//textarea')[0]
+	currentMsg = editinput.get_attribute('innerHTML')
+	if not oldmsg in currentMsg:
+		return
+	removeindex = currentMsg.index(oldmsg)
+	editinput.send_keys(Keys.NULL)
+	for _ in range(len(currentMsg) - removeindex):
+		editinput.send_keys(Keys.ARROW_LEFT)
+	for _ in range(len(oldmsg)):
+		editinput.send_keys(Keys.DELETE)
+	for c in newmsg:
+		editinput.send_keys(c)
+	savebtn = driver.find_elements_by_xpath('//span[contains(text(), "Save")]')[0]
+	driver.execute_script("arguments[0].click();", savebtn)
 	return
