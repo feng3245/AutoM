@@ -10,7 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver, change_message
+from common import setup_driver, upload_to_aws
 import json
 
 driver = setup_driver(sys.argv[1])
@@ -28,6 +28,7 @@ try:
 		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//div[contains(@aria-label, "Next response")]'))
 	with open('../requesterInfo', 'w') as file:
 		file.write(json.dumps(requesterInfo))
+	upload_to_aws('../requesterInfo', 'requester-info', 'requesterInfo', sys.argv[3], sys.argv[4])
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	with open('../requesterUpdateExceptions', 'w') as file:
