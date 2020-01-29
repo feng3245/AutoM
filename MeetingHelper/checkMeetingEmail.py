@@ -30,7 +30,7 @@ try:
 
 	for paragraph, date in zip(paragraphs, dates):
 		if datetime.strptime(date,'%H:%M %a, %d %b %Y') > datetime.now() and datetime.strptime(date,'%H:%M %a, %d %b %Y') < (datetime.now()+timedelta(hours = 24)):						
-			requestedInfo[paragraph.split('Invitee Email:')[-1].split('Event Date/Time')[0].strip()]=requesterInfo[paragraph.split('Invitee Email:')[-1].split('Event Date/Time')[0].strip()]
+			requestedInfo[paragraph.split('Invitee Email:')[-1].split('Event Date/Time')[0].strip()]=requesterInfo[paragraph.split('Invitee Email:')[-1].split('Event Date/Time')[0].strip()]+[date]
 	with open('../requestedInfo', 'w') as file:
 		file.write(json.dumps(requestedInfo))		
 			

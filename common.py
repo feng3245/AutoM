@@ -11,6 +11,23 @@ import smtplib
 from email.mime.text import MIMEText
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.action_chains import ActionChains
+import boto3
+from botocore.exceptions import NoCredentialsError
+
+def upload_to_aws(local_file, bucket, s3_file, access_key, secret_key):
+    s3 = boto3.client('s3', aws_access_key_id=access_key,
+                      aws_secret_access_key=secret_key)
+
+    try:
+        s3.upload_file(local_file, bucket, s3_file)
+        print("Upload Successful")
+        return True
+    except FileNotFoundError:
+        print("The file was not found")
+        return False
+    except NoCredentialsError:
+        print("Credentials not available")
+        return False
 
 def setup_driver(usrdir, headless = False):
 	options = ChromeOptions()
