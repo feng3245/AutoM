@@ -41,8 +41,8 @@ try:
 		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
 
 	time.sleep(20)
-	studentlinks = driver.find_elements_by_xpath('//a')
-	studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
+	studentlinks = driver.find_elements_by_xpath('//a[contains(@href, "personal-mentor")]')
+	studentlinks = [sl.get_attribute('href') for sl in studentlinks]
 	with open('../studentLinksPrior', 'w') as file:
 		file.write('|'.join(studentlinks))
 	studentlinks = list(set(studentlinks) - set(studentlinksLastCheck))
