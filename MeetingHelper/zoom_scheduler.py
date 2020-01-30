@@ -36,7 +36,7 @@ try:
 		requestedInfo = eval(file.read())
 	for requester in requestedInfo:
 		driver.get("https://zoom.us/meeting/schedule")
-		driver.execute_script("arguments[0].value = '1:1 "+requestedInfo[requester][1]+' '+requestedInfo[requester][0]+"';",driver.find_element_by_id('topic'))
+		driver.execute_script("arguments[0].value = '1:1 -"+requestedInfo[requester][1]+'-'+requestedInfo[requester][0]+"';",driver.find_element_by_id('topic'))
 		currentTime = datetime.strptime(requestedInfo[requester][2],'%H:%M %a, %d %b %Y')
 		driver.execute_script("arguments[0].value = '"+currentTime.strftime('%m/%d/%Y')+"';", driver.find_element_by_id('start_date'))
 		driver.execute_script("arguments[0].click();",driver.find_element_by_id('start_time'))
@@ -61,7 +61,7 @@ try:
 		driver.get("http://study-hall.udacity.com/")
 		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
 		try:
-			student_url = driver.find_element_by_xpath('//a/descendant::p[contains(text(),"'+requestedInfo[requester][0]+'")]/ancestor::a').get_attribute('href')
+			student_url = driver.find_element_by_xpath('//a/descendant::p[contains(text(),"'+requestedInfo[requester][0]+'")]/ancestor::a[contains(@href, "personal-mentor")]').get_attribute('href')
 		except:
 			continue
 		driver.get(student_url)
