@@ -43,6 +43,10 @@ try:
 		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//span[contains(text(),"'+currentTime.strftime('%I:%M')+'")]'))
 		driver.execute_script("arguments[0].click();", driver.find_element_by_id('start_time_2'))
 		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//span[contains(text(),"'+currentTime.strftime('%p')+'")]'))
+		driver.execute_script("arguments[0].click();", driver.find_element_by_id('timezone'))
+		time.sleep(5)
+		timezoneString = 'Eastern Time'
+		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//span[contains(text(),"'+timezoneString+'")]'))
 		driver.execute_script("arguments[0].value = '0';", driver.find_element_by_id('duration_hr'))
 		driver.execute_script("arguments[0].value = '30';", driver.find_element_by_id('duration_min'))
 		driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_video_host_on'))
