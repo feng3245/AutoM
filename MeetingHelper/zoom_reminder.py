@@ -57,7 +57,7 @@ try:
 				WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//textarea[@id="userInput"]')))
 				lastMsg = ''
 				try:
-					lastMsg = driver.find_element_by_xpath('//a[contains(text(),"Feng L.")]/ancestor::div[contains(@class, "user-message_container")]/descendant::div[contains(@class,"markdown-renderer")]/p').get_attribute('innerText')
+					lastMsg = driver.find_elements_by_xpath('//a[contains(text(),"Feng L.")]/ancestor::div[contains(@class, "user-message_container")]/descendant::div[contains(@class,"markdown-renderer")]/p')[-1].get_attribute('innerText')
 				except:
 					print('cant find last message')
 					continue
