@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 sys.path.append('../')
-from common import setup_driver
+from common import setup_driver, normalize_schedules
 import json
 driver = setup_driver(sys.argv[1], False)
 
@@ -25,12 +25,15 @@ try:
 	requestedInfo = {}
 	with open('../requesterInfo', 'r') as file:
 		requesterInfo = eval(file.read())
-	paragraphs = [p.get_attribute("innerText") for p in driver.find_elements_by_xpath('//span[contains(text(), "Hi Feng Liu, A new event has been scheduled.")]')]
-	dates = [t.get_attribute("innerText").split('-')[1].strip() for t in driver.find_elements_by_xpath('//span/span[contains(text(), "New Event: ")]')]
-
-	for paragraph, date in zip(paragraphs, dates):
+	emails = [p.get_attribute("innerText").split('Invitee Email:')[-1].split('Event Date/Time')[0].strip() for p in driver.find_elements_by_xpath('//span[contains(text(), "Hi Feng Liu, A new event has been scheduled.") or contains(text(), "Hi Feng Liu, The event below has been canceled.")]')]
+	dates = [t.get_attribute("innerText").split('-')[1].strip() if t.get_attribute("innerText").split(':')[0].strip() != 'Canceled' else '' for t in driver.find_elements_by_xpath('//span/span[contains(text(), "New Event: ") or contains(text(), "Updated: ")  or contains(text(), "Canceled: ")]')]
+	eventcodes = [t.get_attribute("innerText").split(':')[0].strip() for t in driver.find_elements_by_xpath('//span/span[contains(text(), "New Event: ") or contains(text(), "Updated: ")  or contains(text(), "Canceled: ")]')]
+	emails.reverse()
+	dates.reverse()
+	eventcodes.reverse()
+	for email, date in normalize_schedules(zip(emails, dates, eventcodes)):
 		if datetime.strptime(date,'%H:%M %a, %d %b %Y') > datetime.now() and datetime.strptime(date,'%H:%M %a, %d %b %Y') < (datetime.now()+timedelta(hours = 24)):						
-			requestedInfo[paragraph.split('Invitee Email:')[-1].split('Event Date/Time')[0].strip()]=requesterInfo[paragraph.split('Invitee Email:')[-1].split('Event Date/Time')[0].strip()]+[date]
+			requestedInfo[email]=requesterInfo[email]+[date]
 	with open('../requestedInfo', 'w') as file:
 		file.write(json.dumps(requestedInfo))		
 			

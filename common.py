@@ -259,3 +259,12 @@ def change_message(sl, driver, msgusr, oldmsg, newmsg):
 	savebtn = driver.find_elements_by_xpath('//span[contains(text(), "Save")]')[0]
 	driver.execute_script("arguments[0].click();", savebtn)
 	return
+def normalize_schedules(scheduled_events):
+	eventTracker = {}
+	for email, t, eventCode in scheduled_events:
+		if eventCode in ('New Event', 'Updated'):
+			eventTracker[email] = t
+		else:
+			if email in eventTracker:
+				del eventTracker[email]
+	return [(em, eventTracker[em]) for em in eventTracker]
