@@ -233,7 +233,7 @@ def change_message(sl, driver, msgusr, oldmsg, newmsg):
 	time.sleep(5)
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(),"{0}")]'.format(msgusr))))
 
-	lastMsg = driver.find_elements_by_xpath('//a[contains(text(),"{0}")]'.format(msgusr))[-1]
+	lastMsg = driver.find_elements_by_xpath('//a[contains(text(),"{0}")]'.format(msgusr))[0]
 	hover = ActionChains(driver).move_to_element(lastMsg)
 	hover.perform()
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class, "display-user-message_menuContainer")]')))
