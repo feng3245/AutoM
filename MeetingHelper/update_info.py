@@ -24,7 +24,7 @@ try:
 	for _ in range(numResponses):
 		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class,"freebirdFormviewerViewItemsTextShortText freebirdFormviewerViewItemsTextDisabledText freebirdThemedInput")]')))
 		answeredInfo = driver.find_elements_by_xpath('//div[contains(@class,"freebirdFormviewerViewItemsTextShortText freebirdFormviewerViewItemsTextDisabledText freebirdThemedInput")]')
-		requesterInfo[answeredInfo[-1].get_attribute('innerHTML')] = [answeredInfo[0].get_attribute('innerHTML'), answeredInfo[1].get_attribute('innerHTML')]
+		requesterInfo[answeredInfo[-1].get_attribute('innerHTML')] = [answeredInfo[0].get_attribute('innerHTML').rstrip('.'), answeredInfo[1].get_attribute('innerHTML')]
 		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//div[contains(@aria-label, "Next response")]'))
 	with open('../requesterInfo', 'w') as file:
 		file.write(json.dumps(requesterInfo))
