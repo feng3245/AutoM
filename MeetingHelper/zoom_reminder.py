@@ -39,7 +39,7 @@ try:
 		
 		if studentsWithUpCommingCall:
 			driver.get("https://auth.udacity.com/sign-in")
-			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
+			WebDriverWait(driver, 360).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
 			
 			login = driver.find_element_by_xpath('//div[contains(text(),"Sign in with Google")]')
 			driver.execute_script("arguments[0].click();", login)

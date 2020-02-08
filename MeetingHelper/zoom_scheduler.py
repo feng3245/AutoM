@@ -10,7 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver
+from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver, schedule_call
 from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
 driver = setup_driver(sys.argv[1])
@@ -35,28 +35,7 @@ try:
 	with open('../requestedInfo', 'r') as file:
 		requestedInfo = eval(file.read())
 	for requester in requestedInfo:
-		driver.get("https://zoom.us/meeting/schedule")
-		driver.execute_script("arguments[0].value = '1:1 -"+requestedInfo[requester][1]+'-'+requestedInfo[requester][0]+"';",driver.find_element_by_id('topic'))
-		currentTime = datetime.strptime(requestedInfo[requester][2],'%H:%M %a, %d %b %Y')
-		driver.execute_script("arguments[0].value = '"+currentTime.strftime('%m/%d/%Y')+"';", driver.find_element_by_id('start_date'))
-		driver.execute_script("arguments[0].click();",driver.find_element_by_id('start_time'))
-		time.sleep(10)
-		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//span[contains(text(),"'+currentTime.strftime('%I:%M').lstrip('0')+'")]'))
-		driver.execute_script("arguments[0].click();", driver.find_element_by_id('start_time_2'))
-		time.sleep(10)
-		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//span[contains(text(),"'+currentTime.strftime('%p')+'")]'))
-		driver.execute_script("arguments[0].click();", driver.find_element_by_id('timezone'))
-		time.sleep(5)
-		timezoneString = 'Eastern Time'
-		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//span[contains(text(),"'+timezoneString+'")]'))
-		driver.execute_script("arguments[0].value = '0';", driver.find_element_by_id('duration_hr'))
-		driver.execute_script("arguments[0].value = '30';", driver.find_element_by_id('duration_min'))
-		driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_video_host_on'))
-		driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_video_participant_on'))
-		driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_jbh'))
-		driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_waiting_room'))
-		driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_autorec'))
-		driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//button[contains(text(),"Save")]'))
+		schedule_call(driver,requestedInfo[requester][0],requestedInfo[requester][1], requestedInfo[requester][2])
 		WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.ID, 'copyInvitation')))
 		copyinv = driver.find_element_by_id('copyInvitation')
 		ActionChains(driver).move_to_element(copyinv).click().perform()
