@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver
+from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver, is_mentee, clearBox
 from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
 driver = setup_driver(sys.argv[1])
@@ -61,9 +61,13 @@ try:
 				except:
 					print('cant find last message')
 					continue
+				if not is_mentee(driver):
+					continue
+				
 				if "Hi, just want to give you a heads up that we have a schedule meeting within a few hours." in lastMsg:
 					continue
 				messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
+				clearBox(messageinput)
 				messageinput.send_keys(Keys.NULL)
 				time.sleep(3)
 				for c in "Hi, just want to give you a heads up that we have a schedule meeting within a few hours.":

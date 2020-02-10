@@ -10,7 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver, schedule_call
+from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver, schedule_call, is_mentee, clearBox
 from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
 driver = setup_driver(sys.argv[1])
@@ -51,7 +51,10 @@ try:
 			continue
 		driver.get(student_url)
 		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		if not is_mentee(driver):
+			continue
 		messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
+		clearBox(messageinput)
 		messageinput.send_keys(Keys.NULL)
 		messageinput.send_keys(Keys.CONTROL, 'v')
 		time.sleep(1)
