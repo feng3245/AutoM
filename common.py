@@ -39,6 +39,7 @@ def setup_driver(usrdir, headless = False):
 	options.add_argument('--ignore-ssl-errors')
 	options.add_argument('--allow-running-insecure-content')
 	options.add_argument('--disable-web-security')
+	options.add_argument('--disable-dev-shm-usage')
 	options.add_argument('--no-referrers')
 	if headless:
 		options.add_argument("--headless")
