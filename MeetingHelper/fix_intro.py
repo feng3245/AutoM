@@ -10,9 +10,10 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
+from config import *
 from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver, change_message
 
-driver = setup_driver('C:/Users/IntroFix/User Data')
+driver = setup_driver(fixIntroProfileLocation)
 try:
 	driver.get("https://auth.udacity.com/sign-in")
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
@@ -34,11 +35,11 @@ try:
 	time.sleep(5)
 	try:
 		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 		
 	except Exception as e:
 		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 
 	time.sleep(20)
 	studentlinks = driver.find_elements_by_xpath('//a[contains(@href, "personal-mentor")]')

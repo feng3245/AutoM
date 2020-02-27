@@ -10,6 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
+from config import *
 from common import setup_driver, upload_to_aws
 import json
 

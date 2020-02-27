@@ -10,7 +10,8 @@ from datetime import datetime, timedelta
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
-from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver
+from config import *
+from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver, is_mentee, clearBox
 from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
 driver = setup_driver(sys.argv[1])
@@ -33,7 +34,7 @@ try:
 	timesToday = [t.get_attribute('innerHTML') for t in driver.find_elements_by_xpath('//div[contains(@class,"mtg-date") and contains(text(),"Today")]/span')]
 	if timesToday:
 		callsToday = [t.get_attribute('innerText') for t in driver.find_elements_by_xpath('//div[contains(@class,"mtg-date") and contains(text(),"Today")]/ancestor::div[contains(@class, "clearfix")]/descendant::a[contains(@title,"Click to view meeting details")]')]
-		timezoneAdj = 5
+		
 		localTime = (datetime.utcnow() - timedelta(hours=timezoneAdj)).strftime('%H:%M')	
 		studentsWithUpCommingCall = [c.split('-')[-1] for t, c in zip(timesToday,callsToday) if (datetime.strptime(t,"%I:%M %p") - timedelta(hours=3)).strftime('%H:%M') < localTime ]
 		
@@ -45,7 +46,7 @@ try:
 			driver.execute_script("arguments[0].click();", login)
 			time.sleep(20)
 			driver.get("http://study-hall.udacity.com/")
-			WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+			WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 			
 			for student in studentsWithUpCommingCall:
 				try:
@@ -53,17 +54,21 @@ try:
 				except:
 					continue
 				driver.get(student_url)
-				WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(),"Feng L.")]')))
+				WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(),"'+mentorName+'")]')))
 				WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//textarea[@id="userInput"]')))
 				lastMsg = ''
 				try:
-					lastMsg = driver.find_elements_by_xpath('//a[contains(text(),"Feng L.")]/ancestor::div[contains(@class, "user-message_container")]/descendant::div[contains(@class,"markdown-renderer")]/p')[-1].get_attribute('innerText')
+					lastMsg = driver.find_elements_by_xpath('//a[contains(text(),"'+mentorName+'")]/ancestor::div[contains(@class, "user-message_container")]/descendant::div[contains(@class,"markdown-renderer")]/p')[-1].get_attribute('innerText')
 				except:
 					print('cant find last message')
 					continue
+				if not is_mentee(driver):
+					continue
+				
 				if "Hi, just want to give you a heads up that we have a schedule meeting within a few hours." in lastMsg:
 					continue
 				messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
+				clearBox(messageinput)
 				messageinput.send_keys(Keys.NULL)
 				time.sleep(3)
 				for c in "Hi, just want to give you a heads up that we have a schedule meeting within a few hours.":

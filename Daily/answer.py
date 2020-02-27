@@ -10,9 +10,10 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
+from config import *
 from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver
 
-driver = setup_driver('C:/Users/feng3245/AppData/Local/Google/Chrome/User Data')
+driver = setup_driver(dailyAnswerProfileLocation)
 
 
 try:
@@ -35,7 +36,7 @@ try:
 	#driver.execute_script("arguments[0].click();",driver.find_element_by_xpath('//button[contains(text(),"Sign In")]'))
 	time.sleep(5)
 	driver.get("https://hub.udacity.com/")
-	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 	time.sleep(20)
 	studentlinks = []
 	with open('../badlinks', 'r') as file:

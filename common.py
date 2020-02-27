@@ -13,7 +13,12 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.action_chains import ActionChains
 import boto3
 from botocore.exceptions import NoCredentialsError
-
+from config import *
+def is_mentee(driver):
+	try:
+		return driver.find_element_by_xpath('//p[contains(text(),"Mentee")]')
+	except:
+		return False
 def upload_to_aws(local_file, bucket, s3_file, access_key, secret_key):
     s3 = boto3.client('s3', aws_access_key_id=access_key,
                       aws_secret_access_key=secret_key)
@@ -35,6 +40,7 @@ def setup_driver(usrdir, headless = False):
 	options.add_argument('--ignore-ssl-errors')
 	options.add_argument('--allow-running-insecure-content')
 	options.add_argument('--disable-web-security')
+	options.add_argument('--disable-dev-shm-usage')
 	options.add_argument('--no-referrers')
 	if headless:
 		options.add_argument("--headless")
@@ -77,13 +83,13 @@ def clearBox(inputbox):
 def answering_machine(sl, driver):
 	driver.get(sl)
 	time.sleep(5)
-	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@data-user-message="true"]')))
-	if not driver.find_element_by_xpath('//p[contains(text(),"Mentee")]'):
+	if not is_mentee(driver):
 		return
 	messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
 	clearBox(messageinput)
-	for c in 'It appears that your mentor Feng L. is currently unavailable but rest assured your questions will be answered in due time!':
+	for c in 'It appears that your mentor '+mentorName+' is currently unavailable but rest assured your questions will be answered in due time!':
 		messageinput.send_keys(c)
 	messageinput.send_keys(Keys.RETURN)
 	return
@@ -104,14 +110,16 @@ def email_out(smtpsrv, user, password, sendto, subject, msgbody):
 def handle_onetime_message(sl, driver, visited, exclude, greeting):
 	driver.get(sl)
 	time.sleep(5)
-	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
+	if not is_mentee(driver):
+		return
 	if driver.find_element_by_xpath('//p[contains(text(),"Mentee")]'):
 		studentname = driver.find_element_by_xpath('//h2').text
 		if studentname not in exclude and studentname not in visited:
 			visited.append(studentname)
 			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@data-user-message="true"]')))
 			messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')
-			
+			clearBox(messageinput)
 			messageinput.send_keys(Keys.NULL)
 			for c in greeting:
 				messageinput.send_keys(c)
@@ -121,7 +129,7 @@ def handle_onetime_message(sl, driver, visited, exclude, greeting):
 def handle_studentlink(sl, driver, visited, exclude, greeting, projectpasses = {}, projectfails = {}, logfile = None):
 	driver.get(sl)
 	time.sleep(5)
-	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 	if driver.find_element_by_xpath('//p[contains(text(),"Mentee")]'):
 		studentname = driver.find_element_by_xpath('//h2').text
 		if studentname not in exclude and studentname not in visited:
@@ -232,7 +240,8 @@ def change_message(sl, driver, msgusr, oldmsg, newmsg):
 	driver.get(sl)
 	time.sleep(5)
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(),"{0}")]'.format(msgusr))))
-
+	if not is_mentee(driver):
+		return
 	lastMsg = driver.find_elements_by_xpath('//a[contains(text(),"{0}")]'.format(msgusr))[0]
 	hover = ActionChains(driver).move_to_element(lastMsg)
 	hover.perform()

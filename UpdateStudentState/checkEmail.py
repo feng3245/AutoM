@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 sys.path.append('../')
+from config import *
 from common import setup_driver
 
 driver = setup_driver('C:/Users/AutoEmailCheck/User Data', False)
@@ -35,11 +36,11 @@ try:
 			
 			if 'did not pass' in projectprogText:
 				menteename = projectprogText.split('did not pass the')[0].replace('Your mentee', '').replace(',','').strip()
-				menteeproject = projectprogText.split('did not pass the')[1].split('project')[0].strip().replace('Use Deep Learning to Clone Driving Behavior','Behavioral Cloning').replace('Traffic Sign Classification', 'Traffic Sign Classifier')
+				menteeproject = projectprogText.split('did not pass the')[1].split('project')[0].strip().replace(courseRenames[0][0],courseRenames[0][1]).replace(courseRenames[1][0], courseRenames[1][1])
 				menteeFailProjects.append('{0}={1}'.format(menteename, menteeproject))
 			elif 'passed' in  projectprogText:
 				menteename = projectprogText.split('passed the')[0].replace('Your mentee', '').replace(',','').strip()
-				menteeproject = projectprogText.split('passed the')[1].split('project')[0].strip().replace('Use Deep Learning to Clone Driving Behavior','Behavioral Cloning').replace('Traffic Sign Classification', 'Traffic Sign Classifier')
+				menteeproject = projectprogText.split('passed the')[1].split('project')[0].strip().replace(courseRenames[0][0],courseRenames[0][1]).replace(courseRenames[1][0], courseRenames[1][1])
 				menteePassProjects.append('{0}={1}'.format(menteename, menteeproject))
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()

@@ -39,7 +39,7 @@ driver.execute_script("arguments[0].click();", login)
 #driver.execute_script("arguments[0].click();",driver.find_element_by_xpath('//button[contains(text(),"Sign In")]'))
 time.sleep(5)
 driver.get("https://hub.udacity.com/")
-WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 time.sleep(20)
 studentlinks = []
 with open('badlinks', 'r') as file:
@@ -63,5 +63,5 @@ with open('StudentFailProjects', 'r') as file:
 with open('StudentsPassProjects', 'r') as file:
 	successstudents = get_student_project_progress(file.read().replace('\n', ''))
     
-change_message('https://hub.udacity.com/conversations/community:conversation:10428339352-3535828681?contextType=profile&profileId=3535828681', driver, 'Feng L.', 'linked in', 'linkedin')
+change_message('https://hub.udacity.com/conversations/community:conversation:10428339352-3535828681?contextType=profile&profileId=3535828681', driver, ''+mentorName+'', 'linked in', 'linkedin')
 time.sleep(20)
