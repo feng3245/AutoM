@@ -17,7 +17,7 @@ options = ChromeOptions()
 options.add_argument('--allow-running-insecure-content')
 options.add_argument('--disable-web-security')
 options.add_argument('--no-referrers')
-options.add_argument('--user-data-dir=C:/Users/feng3245/AppData/Local/Google/Chrome/User Data')
+options.add_argument('--user-data-dir='+dailyAnswerProfileLocation)
 driver = webdriver.Chrome(executable_path="c:/ChromeDriver/chromedriver.exe", chrome_options=options)
 
 try:

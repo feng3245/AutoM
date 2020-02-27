@@ -10,6 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
+from config import *
 from common import get_student_project_progress, handle_studentlink, get_student_project_string, setup_driver, schedule_call, is_mentee, clearBox
 from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
@@ -44,13 +45,13 @@ try:
 		subprocess.run("clip", universal_newlines=True, input=zoomInvite)
 		time.sleep(2)
 		driver.get("http://study-hall.udacity.com/")
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 		try:
 			student_url = driver.find_element_by_xpath('//a/descendant::p[contains(text(),"'+requestedInfo[requester][0]+'")]/ancestor::a[contains(@href, "personal-mentor")]').get_attribute('href')
 		except:
 			continue
 		driver.get(student_url)
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 		if not is_mentee(driver):
 			continue
 		messageinput = driver.find_element_by_xpath('//textarea[@id="userInput"]')

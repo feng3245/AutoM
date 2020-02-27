@@ -10,6 +10,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 sys.path.append('../')
+from config import *
 from common import get_student_project_progress, handle_onetime_message, get_student_project_string, setup_driver
 
 driver = setup_driver('C:/Users/Feng/AppData/Local/Google/Chrome/User Data')
@@ -36,7 +37,7 @@ try:
 	time.sleep(5)
 	driver.get("https://hub.udacity.com/")
 	
-	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Feng L. profile image"]')))
+	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 	time.sleep(20)
 	studentlinks = driver.find_elements_by_xpath('//a')
 	studentlinks = [sl.get_attribute('href') for sl in studentlinks if '/conversations/community:personal-mentor' in sl.get_attribute('href')]
