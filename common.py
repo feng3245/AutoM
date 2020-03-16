@@ -277,3 +277,26 @@ def normalize_schedules(scheduled_events):
 			if email in eventTracker:
 				del eventTracker[email]
 	return [(em, eventTracker[em]) for em in eventTracker]
+def schedule_call(driver,requester_name,requester_email, requested_time ):
+	driver.get("https://zoom.us/meeting/schedule")
+	driver.execute_script("arguments[0].value = '1:1 -"+requester_email+'-'+requester_name+"';",driver.find_element_by_id('topic'))
+	currentTime = datetime.strptime(requested_time,'%H:%M %a, %d %b %Y')
+	driver.execute_script("arguments[0].value = '"+currentTime.strftime('%m/%d/%Y')+"';", driver.find_element_by_id('start_date'))
+	driver.execute_script("arguments[0].click();",driver.find_element_by_id('start_time'))
+	time.sleep(10)
+	driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//li[contains(@option-id,"'+currentTime.strftime('%I:%M').lstrip('0')+'")]'))
+	driver.execute_script("arguments[0].click();", driver.find_element_by_id('start_time_2'))
+	time.sleep(10)
+	driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//span[contains(text(),"'+currentTime.strftime('%p')+'")]'))
+	driver.execute_script("arguments[0].click();", driver.find_element_by_id('timezone'))
+	time.sleep(5)
+	timezoneString = 'Eastern Time'
+	driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//span[contains(text(),"'+timezoneString+'")]'))
+	driver.execute_script("arguments[0].value = '0';", driver.find_element_by_id('duration_hr'))
+	driver.execute_script("arguments[0].value = '30';", driver.find_element_by_id('duration_min'))
+	driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_video_host_on'))
+	driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_video_participant_on'))
+	driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_jbh'))
+	driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_waiting_room'))
+	driver.execute_script("arguments[0].click();", driver.find_element_by_id('option_autorec'))
+	driver.execute_script("arguments[0].click();", driver.find_element_by_xpath('//button[contains(text(),"Save")]'))
