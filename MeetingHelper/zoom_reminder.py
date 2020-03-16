@@ -45,12 +45,13 @@ try:
 			login = driver.find_element_by_xpath('//div[contains(text(),"Sign in with Google")]')
 			driver.execute_script("arguments[0].click();", login)
 			time.sleep(20)
-			driver.get("http://study-hall.udacity.com/")
-			WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
+			driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
+			WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'personal-mentor')]")))
+			time.sleep(35)
 			
 			for student in studentsWithUpCommingCall:
 				try:
-					student_url = driver.find_element_by_xpath('//a/descendant::p[contains(text(),"'+student+'")]/ancestor::a[contains(@href, "personal-mentor")]').get_attribute('href')
+					student_url = driver.find_element_by_xpath('//a[contains(text(),"'+student+'.") and contains(@href, "personal-mentor")]').get_attribute('href')
 				except:
 					continue
 				driver.get(student_url)
@@ -76,6 +77,9 @@ try:
 				time.sleep(1)
 				messageinput.send_keys(Keys.RETURN)
 				time.sleep(3)
+				driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
+				WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'personal-mentor')]")))
+				time.sleep(35)
 except Exception as e:
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	with open('../zoomreminderexceptionss', 'w') as file:

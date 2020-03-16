@@ -30,7 +30,7 @@ try:
 	studentsinquestion = [ ' '.join([s.split()[0], s.split()[1].title()[:1]]) if len(s.split()) >1 else s  for s in studentsinquestion]
 	print(studentsinquestion)
 	
-	driver.get("https://hub.udacity.com/")
+	driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
 	time.sleep(10)
 	if 'https://auth.udacity.com/sign-in' in driver.current_url:
 		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(),"Sign in with Google")]')))
@@ -49,14 +49,15 @@ try:
 		print(driver.page_source)
 		print(driver.current_url)
 		try:
-			driver.get("https://hub.udacity.com/")
-			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
-			
+			driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
+			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'personal-mentor')]")))
+			time.sleep(35)			
 		except Exception as e:
 			print(driver.current_url)
-			driver.get("https://hub.udacity.com/")
-			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
-	
+			driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
+			WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'personal-mentor')]")))
+			time.sleep(35)
+			
 	WebDriverWait(driver, 180).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
 	time.sleep(20)
 	studentlinks = driver.find_elements_by_xpath('//a['+" or ".join(["contains(.,'"+siq+"')" for siq in studentsinquestion])+']')

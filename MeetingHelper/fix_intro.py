@@ -34,12 +34,13 @@ try:
 	#driver.execute_script("arguments[0].click();",driver.find_element_by_xpath('//button[contains(text(),"Sign In")]'))
 	time.sleep(5)
 	try:
-		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
-		
+		driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
+		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'personal-mentor')]")))
+		time.sleep(35)
 	except Exception as e:
-		driver.get("https://hub.udacity.com/")
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
+		driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
+		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'personal-mentor')]")))
+		time.sleep(35)
 
 	time.sleep(20)
 	studentlinks = driver.find_elements_by_xpath('//a[contains(@href, "personal-mentor")]')

@@ -44,10 +44,11 @@ try:
 		zoomInvite = driver.find_element_by_id('invite_email').get_attribute('innerHTML')
 		subprocess.run("clip", universal_newlines=True, input=zoomInvite)
 		time.sleep(2)
-		driver.get("http://study-hall.udacity.com/")
-		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
+		driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
+		WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'personal-mentor')]")))
+		time.sleep(35)
 		try:
-			student_url = driver.find_element_by_xpath('//a/descendant::p[contains(text(),"'+requestedInfo[requester][0]+'")]/ancestor::a[contains(@href, "personal-mentor")]').get_attribute('href')
+			student_url = driver.find_element_by_xpath('//a[contains(text(),"'+requestedInfo[requester][0]+'") and contains(@href, "personal-mentor")]').get_attribute('href')
 		except:
 			continue
 		driver.get(student_url)

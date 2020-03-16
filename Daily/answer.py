@@ -35,9 +35,9 @@ try:
 	#	password.send_keys(c)
 	#driver.execute_script("arguments[0].click();",driver.find_element_by_xpath('//button[contains(text(),"Sign In")]'))
 	time.sleep(5)
-	driver.get("https://hub.udacity.com/")
-	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, '//div[@aria-label="'+mentorName+' profile image"]')))
-	time.sleep(20)
+	driver.get("https://mentor-dashboard.udacity.com/mentorship/overview")
+	WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'personal-mentor')]")))
+	time.sleep(35)
 	studentlinks = []
 	with open('../badlinks', 'r') as file:
 		studentlinks = file.read().replace('\n', '').split('|')
